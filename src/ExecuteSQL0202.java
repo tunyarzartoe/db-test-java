@@ -14,7 +14,7 @@ public class ExecuteSQL0202 {
 			Class.forName("com.mysql.jdbc.Driver");
 			// DBMSとの接続を確立する
 			con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:65534/受注管理db",
+					"jdbc:mysql://localhost:3306/受注管理db",
 					"user1",
 					"pass1");
 			// SQL文を作成する

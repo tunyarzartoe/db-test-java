@@ -10,10 +10,10 @@ public class OrderControlDBAccess {
 	// DBとの接続を確立する
 	private Connection createConnection() {
 		Connection con = null;
-		try{
+		try{ 
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection(
-					"jdbc:mysql://localhost:65534/受注管理db",
+					"jdbc:mysql://localhost:3306/受注管理db",
 					"user1",
 					"pass1");
 		} catch(ClassNotFoundException e) {
