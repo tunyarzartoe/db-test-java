@@ -81,4 +81,51 @@ public class OrderControlDBAccess {
 		closeConnection(con);
 		return list;
 	}
+	// 指定した単価以下の商品リストを取得する
+	public ArrayList<ProductBean> findProductsByPrice(int price) {
+		Connection con = createConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<ProductBean> list = new ArrayList<ProductBean>();
+		try{
+			if(con != null) {
+				String sql = 	"SELECT 商品ID, 商品名, 単価 " +
+								"FROM 商品マスタ " +
+								"WHERE 単価 <= ?;";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setInt(1, price);		// 1番目の?に引数priceを設定する
+				rs = pstmt.executeQuery();
+				while(rs.next() == true) {
+					String id = rs.getString("商品ID");
+					String name = rs.getString("商品名");
+					int unitPrice = rs.getInt("単価");
+					ProductBean bean = new ProductBean(id, name, unitPrice);
+					list.add(bean);
+				}
+			}
+		} catch(SQLException e) {
+			System.out.println(
+					"DB検索時にエラーが発生しました（商品検索）。");
+			e.printStackTrace();
+		} finally {
+			try{
+				if(rs != null) {
+					rs.close();
+				}
+			} catch(SQLException e) {
+				System.out.println("DB切断時にエラーが発生しました。");
+				e.printStackTrace();
+			}
+			try{
+				if(pstmt != null) {
+					pstmt.close();
+				}
+			} catch(SQLException e) {
+				System.out.println("DB切断時にエラーが発生しました。");
+				e.printStackTrace();
+			}
+		}
+		closeConnection(con);
+		return list;
+	}
 }
