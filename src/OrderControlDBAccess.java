@@ -128,4 +128,36 @@ public class OrderControlDBAccess {
 		closeConnection(con);
 		return list;
 	}
+	// 特定の商品情報を登録する
+	public int createSpecificProduct() {
+		Connection con = createConnection();
+		PreparedStatement pstmt = null;
+		int count = 0;		// 登録件数
+		try{
+			if(con != null) {
+				String sql = 	"INSERT INTO 商品マスタ (商品ID, 商品名, 単価) " +
+								"VALUES (?, ?, ?);";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, "F-101");	// 商品ID
+				pstmt.setString(2, "バナナ");	// 商品名
+				pstmt.setInt(3, 1380);			// 単価
+				count = pstmt.executeUpdate();
+			}
+		} catch(SQLException e) {
+			System.out.println(
+					"DB登録時にエラーが発生しました（商品登録）。");
+			e.printStackTrace();
+		} finally {
+			try{
+				if(pstmt != null) {
+					pstmt.close();
+				}
+			} catch(SQLException e) {
+				System.out.println("DB切断時にエラーが発生しました。");
+				e.printStackTrace();
+			}
+		}
+		closeConnection(con);
+		return count;
+	}
 }
