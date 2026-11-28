@@ -36,6 +36,7 @@ public class OrderControlDBAccess {
 			e.printStackTrace();
 		}
 	}
+	
 	// 商品リストを取得する
 	public ArrayList<ProductBean> findAllProducts() {
 		Connection con = createConnection();
@@ -81,6 +82,7 @@ public class OrderControlDBAccess {
 		closeConnection(con);
 		return list;
 	}
+	
 	// 指定した単価以下の商品リストを取得する
 	public ArrayList<ProductBean> findProductsByPrice(int price) {
 		Connection con = createConnection();
@@ -128,6 +130,7 @@ public class OrderControlDBAccess {
 		closeConnection(con);
 		return list;
 	}
+	
 	// 特定の商品情報を登録する
 	public int createSpecificProduct() {
 		Connection con = createConnection();
@@ -141,6 +144,39 @@ public class OrderControlDBAccess {
 				pstmt.setString(1, "F-101");	// 商品ID
 				pstmt.setString(2, "バナナ");	// 商品名
 				pstmt.setInt(3, 1380);			// 単価
+				count = pstmt.executeUpdate();
+			}
+		} catch(SQLException e) {
+			System.out.println(
+					"DB登録時にエラーが発生しました（商品登録）。");
+			e.printStackTrace();
+		} finally {
+			try{
+				if(pstmt != null) {
+					pstmt.close();
+				}
+			} catch(SQLException e) {
+				System.out.println("DB切断時にエラーが発生しました。");
+				e.printStackTrace();
+			}
+		}
+		closeConnection(con);
+		return count;
+	}
+	
+	// 引数の商品情報を登録する
+	public int createProduct(String id, String name, int price) {
+		Connection con = createConnection();
+		PreparedStatement pstmt = null;
+		int count = 0;		// 登録件数
+		try{
+			if(con != null) {
+				String sql = 	"INSERT INTO 商品マスタ (商品ID, 商品名, 単価) " +
+								"VALUES (?, ?, ?);";
+				pstmt = con.prepareStatement(sql);
+				pstmt.setString(1, id);		// 商品ID
+				pstmt.setString(2, name);	// 商品名
+				pstmt.setInt(3, price);		// 単価
 				count = pstmt.executeUpdate();
 			}
 		} catch(SQLException e) {
